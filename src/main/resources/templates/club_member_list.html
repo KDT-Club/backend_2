@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>내 동아리</title>
+</head>
+<body>
+<h2>멤버 리스트</h2>
+<table>
+    <tr>
+        <th>memberImageurl</th>
+        <th>name</th>
+        <th>status</th>
+    </tr>
+    <tr th:each="clubMember : ${clubMemberList}">
+        <td th:text="${clubMember.memberImageurl}"></td>
+        <td th:text="${clubMember.name}"></td>
+        <td th:text="${clubMember.status}"></td>
+        <td>
+            <a th:href="@{/clubs/{clubId}/clubMember/{memberId}(clubId=${clubId}, memberId=${clubMember.memberId})}">
+                <button>></button>
+            </a>
+        </td>
+    </tr>
+</table>
+</body>
+</html>

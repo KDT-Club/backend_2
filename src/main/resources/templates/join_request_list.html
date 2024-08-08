@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>내 동아리</title>
+</head>
+<body>
+<h2>가입 신청 현황</h2>
+<table>
+    <tr>
+        <th>memberImageurl</th>
+        <th>name</th>
+        <th>department</th>
+        <th>studentId</th>
+    </tr>
+    <tr th:each="joinRequest : ${joinRequestList}">
+        <td th:text="${joinRequest.memberImageurl}"></td>
+        <td th:text="${joinRequest.name}"></td>
+        <td th:text="${joinRequest.department}"></td>
+        <td th:text="${joinRequest.studentId}"></td>
+        <td>
+            <a th:href="@{/clubs/{clubId}/joinRequest/{requestId}(requestId=${joinRequest.requestId})}">
+                <button>></button>
+            </a>
+        </td>
+    </tr>
+</table>
+</body>
+</html>

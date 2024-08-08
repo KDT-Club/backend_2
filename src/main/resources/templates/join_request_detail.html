@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>내 동아리</title>
+</head>
+<body>
+<div>
+    <img th:src="${joinRequest.memberImageurl}" alt="Member Image"/>
+    <span th:text="${joinRequest.name}"></span>
+    <span th:text="${joinRequest.studentId}"></span>
+    <span th:text="${joinRequest.department}"></span>
+    <span th:text="${joinRequest.introduction}"></span>
+</div>
+<form th:action="@{/clubs/{clubId}/joinRequest/{requestId}/approveRequest(requestId=${joinRequest.requestId}, clubId=${joinRequest.clubId})}" method="post">
+    <input type="hidden" name="memberId" th:value="${joinRequest.memberId}"/>
+    <button type="submit">가입 승인</button>
+</form>
+<form th:action="@{/clubs/{clubId}/joinRequest/{requestId}/denyRequest(requestId=${joinRequest.requestId}, clubId=${joinRequest.clubId})}" method="post">
+    <button type="submit">가입 거절</button>
+</form>
+</body>
+</html>
