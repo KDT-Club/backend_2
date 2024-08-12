@@ -8,5 +8,4 @@ public class Test {
     // github에 해당 내용이 푸시가 되는지 확인
 
     //테스트 결과:
-
 }
