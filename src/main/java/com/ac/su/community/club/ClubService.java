@@ -32,7 +32,7 @@ public class ClubService {
      * @return 모든 클럽 데이터를 담은 ResponseEntity 객체
      */
     public ResponseEntity<?> getAllClubs() {
-        List<Club> clubs = clubRepository.findAll(); // 모든 클럽 데이터를 데이터베이스에서 조회
+        List<Club> clubs = clubRepository.customFindAll(); // 모든 클럽 데이터를 데이터베이스에서 조회
         // 클럽 데이터를 ClubDTO로 변환
         List<ClubDTO> responseDTOs = clubs.stream()
                 .map(club -> new ClubDTO(
