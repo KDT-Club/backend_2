@@ -36,12 +36,14 @@ public class SecurityConfig {
         http.formLogin((formLogin) -> formLogin.loginPage("/login") // 폼으로 로그인, 로그인 페이지 URL 적어주기 GET
                 .usernameParameter("studentId")
                 .passwordParameter("password")
-                .defaultSuccessUrl("https://zmffjq.store/") // HTTPS로 리디렉션 설정
+                .defaultSuccessUrl("/")
+                .failureUrl("/login-fail")
+//                .defaultSuccessUrl("https://zmffjq.store/") // HTTPS로 리디렉션 설정
         );
         // 로그아웃 설정
         http.logout((logout) -> logout
                 .logoutUrl("/logout") // 로그아웃 URL
-                .logoutSuccessUrl("https://zmffjq.store/") // 로그아웃 성공 시 이동할 URL
+                .logoutSuccessUrl("/") // 로그아웃 성공 시 이동할 URL
         );
         return http.build();
     }

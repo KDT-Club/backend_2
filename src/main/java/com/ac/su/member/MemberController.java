@@ -28,6 +28,10 @@ public class MemberController {
     public ResponseEntity<ResponseMessage> test() {
         return ResponseEntity.ok(new ResponseMessage("성공"));
     }
+    @GetMapping("/login-fail")
+    public ResponseEntity<ResponseMessage> loginFail() {
+        return ResponseEntity.ok(new ResponseMessage("로그인 실패"));
+    }
 
     @GetMapping("/getUserId")
     public ResponseEntity getUserId(Authentication auth) {
