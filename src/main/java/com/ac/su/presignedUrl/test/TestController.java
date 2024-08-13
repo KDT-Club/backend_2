@@ -1,5 +1,6 @@
 package com.ac.su.presignedUrl.test;
 
+import com.ac.su.ResponseMessage;
 import com.ac.su.community.club.Club;
 import com.ac.su.community.club.ClubRepository;
 import com.ac.su.member.MemberRepository;
@@ -64,6 +65,11 @@ public class TestController {
             response.put("message", "서버에서 오류가 발생했습니다.");
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
+    }
+
+    @GetMapping("/test/cicd")
+    public ResponseEntity<ResponseMessage> testCICD() {
+        return ResponseEntity.ok(new ResponseMessage("CI/CD 성공!!!"));
     }
 
 
