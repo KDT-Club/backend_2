@@ -67,7 +67,7 @@ public class TestController {
         }
     }
 
-    @GetMapping("/test/cicd")
+        @GetMapping("/test/cicd")
     public ResponseEntity<ResponseMessage> testCICD() {
         return ResponseEntity.ok(new ResponseMessage("CI/CD 성공!!!"));
     }
