@@ -27,4 +27,18 @@ public class ExecutionTimeAspect {
 
         return proceed;
     }
+    @Around("execution(* com.ac.su.presignedUrl.test.TestController.search(..))")
+    public Object measureExecutionTime2(ProceedingJoinPoint joinPoint) throws Throwable {
+        long startTime = System.currentTimeMillis();
+
+        // 실제 메서드를 실행
+        Object proceed = joinPoint.proceed();
+
+        long endTime = System.currentTimeMillis();
+        long executionTime = endTime - startTime;
+
+        logger.debug(joinPoint.getSignature() + " executed in " + executionTime + "ms");
+
+        return proceed;
+    }
 }

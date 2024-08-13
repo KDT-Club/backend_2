@@ -22,4 +22,7 @@ public interface ClubRepository extends JpaRepository<Club, Long> {
     @Query(value = "SELECT c.* FROM club c INNER JOIN member m ON c.member_id = m.member_id", nativeQuery = true)
     List<Club> customFindAll2();
 
+    //검색기능
+    List<Club> findByNameContains(String clubName);
+
 }
