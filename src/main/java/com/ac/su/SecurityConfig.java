@@ -56,11 +56,11 @@ public class SecurityConfig {
                 registry.addMapping("/**")
                         .allowedOrigins(
                                 "http://localhost:3000",
-                                "https://plzget.github.io",
-                                "https://zmffjq.store",
-                                "https://www.zmffjq.store",
-                                "http://zmffjq.store",
-                                "http://www.zmffjq.store"
+                                "https://plzget.github.io"
+//                                "https://zmffjq.store",
+//                                "https://www.zmffjq.store",
+//                                "http://zmffjq.store",
+//                                "http://www.zmffjq.store"
                         )
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                         .allowedHeaders("*")
