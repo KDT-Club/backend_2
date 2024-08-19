@@ -23,5 +23,6 @@ public class Notification {
     @ManyToOne
     @JoinColumn(name="member_id", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private Member member; // 멤버 고유 번호
+    private boolean readFlag; // 확인 여부
 
 }
