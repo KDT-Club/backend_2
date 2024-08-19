@@ -23,7 +23,7 @@ public class NotificationController {
     private final NotificationRepository notificationRepository;
     private final MemberRepository memberRepository;
 
-    @GetMapping("/getnotifications")
+    @GetMapping("/notifications")
     public MessageFlagResponse getMessageFlag() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentUsername = authentication.getName();
