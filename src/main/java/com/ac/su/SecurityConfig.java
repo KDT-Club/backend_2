@@ -46,7 +46,6 @@ public class SecurityConfig {
         );
         return http.build();
     }
-
     @Bean
     public WebMvcConfigurer corsConfigurer() {
         return new WebMvcConfigurer() {
