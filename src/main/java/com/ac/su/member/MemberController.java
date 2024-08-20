@@ -26,11 +26,11 @@ public class MemberController {
     //메인페이지로 이동
     @GetMapping("/")
     public ResponseEntity<ResponseMessage> test() {
-        return ResponseEntity.ok(new ResponseMessage("성공"));
+        return ResponseEntity.ok(new ResponseMessage("성공!!!"));
     }
     @GetMapping("/login-fail")
     public ResponseEntity<ResponseMessage> loginFail() {
-        return ResponseEntity.ok(new ResponseMessage("로그인 실패"));
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseMessage("로그인 실패"));
     }
 
     @GetMapping("/getUserId")
