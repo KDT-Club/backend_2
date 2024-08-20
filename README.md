@@ -8,3 +8,4 @@ webhook 되나?
 d
 d
 server.servlet.session.cookie.same-site=None 젠킨스 설정파일 application.properties에 추가함
+ㅇㅇ
