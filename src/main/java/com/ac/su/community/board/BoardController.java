@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -47,11 +49,16 @@ public class BoardController {
         Optional<Post> postOptional = postRepository.findById(post_id);
         if (postOptional.isPresent() && postOptional.get().getBoardId().getId().equals(board_id)) {
             Post post = postOptional.get();
-            List<String> attachmentNames = attachmentRepository.findByPostId(post)
+            List<Map<String, Object>> attachments = attachmentRepository.findByPostId(post)
                     .stream()
-                    .map(Attachment::getAttachmentName)
+                    .map(attachment -> {
+                        Map<String, Object> map = new HashMap<>();
+                        map.put("attachmentId", attachment.getId());
+                        map.put("attachmentName", attachment.getAttachmentName());
+                        return map;
+                    })
                     .collect(Collectors.toList());
-            return new PostResponse(post, attachmentNames);
+            return new PostResponse(post, attachments);
         } else {
             throw new IllegalArgumentException("Post not found with id: " + post_id + " and board_id: " + board_id);
         }
@@ -104,16 +111,20 @@ public class BoardController {
         Optional<Post> postOptional = postRepository.findById(post_id);
         if (postOptional.isPresent() && postOptional.get().getBoardId().getId().equals(board_id) && postOptional.get().getClubName().equals(club.getName())) {
             Post post = postOptional.get();
-            List<String> attachmentNames = attachmentRepository.findByPostId(post)
+            List<Map<String, Object>> attachments = attachmentRepository.findByPostId(post)
                     .stream()
-                    .map(Attachment::getAttachmentName)
+                    .map(attachment -> {
+                        Map<String, Object> map = new HashMap<>();
+                        map.put("attachmentId", attachment.getId());
+                        map.put("attachmentName", attachment.getAttachmentName());
+                        return map;
+                    })
                     .collect(Collectors.toList());
-            return new PostResponse(post, attachmentNames);
+            return new PostResponse(post, attachments);
         } else {
             throw new IllegalArgumentException("Post not found with post_id: " + post_id + ", board_id: " + board_id + ", and club_id: " + club_id);
         }
     }
-
     @GetMapping("/clubs/{clubId}/board/4/posts")
     public List<BoardDTO> getAllInternalPosts(@PathVariable Long clubId) {
         Club club = clubRepository.findById(clubId)
@@ -141,11 +152,16 @@ public class BoardController {
         Optional<Post> postOptional = postRepository.findById(post_id);
         if (postOptional.isPresent() && postOptional.get().getBoardId().getId().equals(board_id) && postOptional.get().getClubName().equals(club.getName())) {
             Post post = postOptional.get();
-            List<String> attachmentNames = attachmentRepository.findByPostId(post)
+            List<Map<String, Object>> attachments = attachmentRepository.findByPostId(post)
                     .stream()
-                    .map(Attachment::getAttachmentName)
+                    .map(attachment -> {
+                        Map<String, Object> map = new HashMap<>();
+                        map.put("attachmentId", attachment.getId());
+                        map.put("attachmentName", attachment.getAttachmentName());
+                        return map;
+                    })
                     .collect(Collectors.toList());
-            return new PostResponse(post, attachmentNames);
+            return new PostResponse(post, attachments);
         } else {
             throw new IllegalArgumentException("Post not found with post_id: " + post_id + ", board_id: " + board_id + ", and club_id: " + club_id);
         }
@@ -156,11 +172,16 @@ public class BoardController {
         Optional<Post> postOptional = postRepository.findById(postId);
         if (postOptional.isPresent()) {
             Post post = postOptional.get();
-            List<String> attachmentNames = attachmentRepository.findByPostId(post)
+            List<Map<String, Object>> attachments = attachmentRepository.findByPostId(post)
                     .stream()
-                    .map(Attachment::getAttachmentName)
+                    .map(attachment -> {
+                        Map<String, Object> map = new HashMap<>();
+                        map.put("attachmentId", attachment.getId());
+                        map.put("attachmentName", attachment.getAttachmentName());
+                        return map;
+                    })
                     .collect(Collectors.toList());
-            return new PostResponse(post, attachmentNames);
+            return new PostResponse(post, attachments);
         } else {
             throw new IllegalArgumentException("Post not found with id: " + postId);
         }
@@ -171,9 +192,9 @@ public class BoardController {
     public class PostResponse {
         // Getters and setters
         private Post post;
-        private List<String> attachmentNames;
+        private List<Map<String, Object>> attachmentNames;
 
-        public PostResponse(Post post, List<String> attachmentNames) {
+        public PostResponse(Post post, List<Map<String, Object>> attachmentNames) {
             this.post = post;
             this.attachmentNames = attachmentNames;
         }
