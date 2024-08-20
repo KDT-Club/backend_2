@@ -30,7 +30,7 @@ public class MemberController {
     }
     @GetMapping("/login-fail")
     public ResponseEntity<ResponseMessage> loginFail() {
-        return ResponseEntity.ok(new ResponseMessage("로그인 실패"));
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseMessage("로그인 실패"));
     }
 
     @GetMapping("/getUserId")
