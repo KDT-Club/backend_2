@@ -35,6 +35,7 @@ public class MemberController {
 
     @GetMapping("/getUserId")
     public ResponseEntity getUserId(Authentication auth) {
+        System.out.println("auth 객체 확인: " + auth);
         if (auth == null || !auth.isAuthenticated()) {
             // 인증되지 않은 경우 HTTP 401 (UNAUTHORIZED) 상태 코드와 메시지를 반환
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ResponseMessage("로그인 필요"));

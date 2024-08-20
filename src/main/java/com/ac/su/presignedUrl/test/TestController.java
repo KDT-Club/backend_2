@@ -23,7 +23,7 @@ public class TestController {
     private final ClubRepository clubRepository;
 
     //모든 클럽 정보 불러옴
-    @GetMapping("/test/clubs")
+    @GetMapping("/test")
     public List<Club> getClubs() {
         List<Club> clubs = clubRepository.findAll();
         return clubs;
