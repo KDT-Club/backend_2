@@ -1,10 +1,7 @@
 package com.ac.su.community.post;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
 import com.ac.su.ResponseMessage;
+import com.ac.su.community.attachment.AttachmentService;
 import com.ac.su.clubmember.ClubMemberId;
 import com.ac.su.clubmember.ClubMemberService;
 import com.ac.su.clubmember.MemberStatus;
@@ -18,14 +15,15 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
 public class PostController {
 
     private final PostService postService;
+    private final AttachmentService attachmentService;
     private final MemberRepository memberRepository;
     private final ClubMemberService clubMemberService;
 
@@ -48,7 +46,6 @@ public class PostController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseMessage("게시글 작성 실패! 에러 메시지: " + e.getMessage()));
         }
     }
-
 
     // 동아리 활동 게시판 글 작성 처리
     @PostMapping("/board/3/club/{clubId}/posts")
@@ -129,9 +126,20 @@ public class PostController {
     // 게시물 수정
     @PutMapping("/posts/{postId}")
     public ResponseEntity<PostResponseDto> updatePost(@PathVariable Long postId,
-                                      @RequestBody PostUpdateDto postUpdateDto) {
+                                                      @RequestBody PostUpdateDto postUpdateDto) {
         PostResponseDto response = postService.updatePost(postId, postUpdateDto);
         return ResponseEntity.ok(response);
 
+    }
+
+    // 첨부파일 삭제
+    @DeleteMapping("/posts/{postId}/attachments/{attachmentId}")
+    public ResponseEntity<ResponseMessage> deleteAttachment(@PathVariable Long postId, @PathVariable Long attachmentId) {
+        try {
+            attachmentService.deleteAttachment(postId, attachmentId);
+            return ResponseEntity.ok(new ResponseMessage("첨부파일 삭제 성공!"));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseMessage("첨부파일 삭제 실패! 에러 메시지: " + e.getMessage()));
+        }
     }
 }
