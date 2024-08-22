@@ -33,6 +33,10 @@ public class ClubService {
      */
     public ResponseEntity<?> getAllClubs() {
         List<Club> clubs = clubRepository.customFindAll(); // 모든 클럽 데이터를 데이터베이스에서 조회
+        // .findAll() : 약 100ms (JPA 기본 메소드)
+        // .customFindAll2 : 약 100ms (SQL 조인 문법)
+        // .customFindAll : 약 30ms (JPQL JOIN FETCH 문법)
+
         // 클럽 데이터를 ClubDTO로 변환
         List<ClubDTO> responseDTOs = clubs.stream()
                 .map(club -> new ClubDTO(
