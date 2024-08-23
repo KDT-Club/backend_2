@@ -1,5 +1,7 @@
 package com.ac.su.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
@@ -13,29 +15,31 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 import java.time.Duration;
 
-@Configuration // 이 클래스가 Spring의 설정 클래스로 사용됨을 나타냄
-@EnableCaching // Spring의 캐시 기능을 활성화함
+@Configuration
+@EnableCaching
 public class RedisCacheConfig {
+
     @Bean
     public CacheManager boardCacheManager(RedisConnectionFactory redisConnectionFactory) {
-        // RedisCacheConfiguration 객체를 생성하여 Redis 캐시의 기본 설정을 정의함
+        // ObjectMapper 설정
+        ObjectMapper objectMapper = new ObjectMapper();
+        // Java 8/17 Date/Time 타입 처리 모듈 등록
+        objectMapper.registerModule(new JavaTimeModule());
+        objectMapper.findAndRegisterModules(); // 자동 모듈 로드
+
+        // JSON 직렬화에 ObjectMapper를 전달하여 Jackson2JsonRedisSerializer 생성
+        Jackson2JsonRedisSerializer<Object> jackson2JsonRedisSerializer = new Jackson2JsonRedisSerializer<>(objectMapper, Object.class);
+
+        // RedisCacheConfiguration 설정
         RedisCacheConfiguration redisCacheConfiguration = RedisCacheConfiguration
                 .defaultCacheConfig()
-                // Redis에 저장할 키를 String 형태로 직렬화하여 저장하도록 설정
                 .serializeKeysWith(
-                        RedisSerializationContext.SerializationPair.fromSerializer(
-                                new StringRedisSerializer()))
-                // Redis에 저장할 값을 JSON 형태로 직렬화하여 저장하도록 설정
+                        RedisSerializationContext.SerializationPair.fromSerializer(new StringRedisSerializer()))
                 .serializeValuesWith(
-                        RedisSerializationContext.SerializationPair.fromSerializer(
-                                new Jackson2JsonRedisSerializer<Object>(Object.class)
-                        )
-                )
-                // 캐시에 저장된 데이터의 만료 시간을 1분으로 설정함
+                        RedisSerializationContext.SerializationPair.fromSerializer(jackson2JsonRedisSerializer))
                 .entryTtl(Duration.ofMinutes(1L));
 
-        // RedisCacheManager는 캐시를 관리하는 객체로, 여기서 RedisConnectionFactory를 사용해
-        // Redis 서버에 연결하고, 위에서 정의한 RedisCacheConfiguration을 기본 설정으로 사용함
+        // RedisCacheManager 생성 및 반환
         return RedisCacheManager
                 .RedisCacheManagerBuilder
                 .fromConnectionFactory(redisConnectionFactory)

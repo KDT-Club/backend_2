@@ -9,6 +9,7 @@ import com.ac.su.community.post.PostRepository;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
@@ -27,6 +28,13 @@ public class BoardController {
     private final ClubRepository clubRepository;
     private final AttachmentRepository attachmentRepository;
 
+    // 캐싱을 위한 어노테이션. 이 메서드의 결과를 캐시에 저장하고,
+    // 동일한 인자로 호출될 때 캐시에서 결과를 가져옴
+    @Cacheable(
+            cacheNames = "getBoards", // 캐시의 이름. 다른 캐시와 구분하기 위해 사용됨
+            key = "'boards:type:' + #type", // 캐시의 키를 정의. 여기서는 페이지와 사이즈를 포함한 문자열로 키를 생성함
+            cacheManager = "boardCacheManager" // 사용할 캐시 매니저를 지정함. RedisCacheConfig에서 정의한 캐시 매니저를 사용
+    )
     @GetMapping("/board/{board_id}/posts")
     public List<BoardDTO> getAllGeneralPost(@PathVariable Long board_id) {
         Board board = new Board();
