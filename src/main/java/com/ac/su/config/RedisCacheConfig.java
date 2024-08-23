@@ -1,6 +1,8 @@
 package com.ac.su.config;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
@@ -25,7 +27,8 @@ public class RedisCacheConfig {
         ObjectMapper objectMapper = new ObjectMapper();
         // Java 8/17 Date/Time 타입 처리 모듈 등록
         objectMapper.registerModule(new JavaTimeModule());
-        objectMapper.findAndRegisterModules(); // 자동 모듈 로드
+        objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS); // 날짜를 ISO-8601 문자열로 직렬화
+        objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL); // null 필드는 직렬화하지 않음
 
         // JSON 직렬화에 ObjectMapper를 전달하여 Jackson2JsonRedisSerializer 생성
         Jackson2JsonRedisSerializer<Object> jackson2JsonRedisSerializer = new Jackson2JsonRedisSerializer<>(objectMapper, Object.class);
@@ -47,3 +50,4 @@ public class RedisCacheConfig {
                 .build();
     }
 }
+

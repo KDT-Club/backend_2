@@ -32,7 +32,7 @@ public class BoardController {
     // 동일한 인자로 호출될 때 캐시에서 결과를 가져옴
     @Cacheable(
             cacheNames = "getBoards", // 캐시의 이름. 다른 캐시와 구분하기 위해 사용됨
-            key = "'boards:type:' + #type", // 캐시의 키를 정의. 여기서는 페이지와 사이즈를 포함한 문자열로 키를 생성함
+            key = "'boards:board_id:' + #board_id", // 캐시의 키를 정의. 여기서는 페이지와 사이즈를 포함한 문자열로 키를 생성함
             cacheManager = "boardCacheManager" // 사용할 캐시 매니저를 지정함. RedisCacheConfig에서 정의한 캐시 매니저를 사용
     )
     @GetMapping("/board/{board_id}/posts")
