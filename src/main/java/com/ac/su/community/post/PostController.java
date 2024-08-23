@@ -17,6 +17,7 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
@@ -46,6 +47,7 @@ public class PostController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseMessage("게시글 작성 실패! 에러 메시지: " + e.getMessage()));
         }
     }
+
 
     // 동아리 활동 게시판 글 작성 처리
     @PostMapping("/board/3/club/{clubId}/posts")
@@ -126,10 +128,21 @@ public class PostController {
     // 게시물 수정
     @PutMapping("/posts/{postId}")
     public ResponseEntity<PostResponseDto> updatePost(@PathVariable Long postId,
-                                                      @RequestBody PostUpdateDto postUpdateDto) {
+                                      @RequestBody PostUpdateDto postUpdateDto) {
         PostResponseDto response = postService.updatePost(postId, postUpdateDto);
         return ResponseEntity.ok(response);
 
+    }
+    // 게시물 신고
+    @PostMapping("/{postId}/report")
+    public ResponseEntity<String> reportPost(@PathVariable Long postId, @RequestParam Long memberId) {
+        Optional<Member> member = getMemberById(memberId);
+        postService.reportPost(postId, member);
+        return ResponseEntity.ok("게시물 신고가 완료되었습니다");
+    }
+
+    private Optional<Member> getMemberById(Long memberId) {
+        return memberRepository.findById(memberId);
     }
 
     // 첨부파일 삭제
