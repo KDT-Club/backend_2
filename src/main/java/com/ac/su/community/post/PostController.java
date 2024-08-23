@@ -1,6 +1,5 @@
 package com.ac.su.community.post;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
@@ -133,5 +132,16 @@ public class PostController {
         PostResponseDto response = postService.updatePost(postId, postUpdateDto);
         return ResponseEntity.ok(response);
 
+    }
+    // 게시물 신고
+    @PostMapping("/{postId}/report")
+    public ResponseEntity<String> reportPost(@PathVariable Long postId, @RequestParam Long memberId) {
+        Optional<Member> member = getMemberById(memberId);
+        postService.reportPost(postId, member);
+        return ResponseEntity.ok("게시물 신고가 완료되었습니다");
+    }
+
+    private Optional<Member> getMemberById(Long memberId) {
+        return memberRepository.findById(memberId);
     }
 }

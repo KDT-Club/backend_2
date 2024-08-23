@@ -1,17 +1,17 @@
 package com.ac.su.community.post;
 
-import com.ac.su.community.attachment.Attachment;
-import com.ac.su.community.attachment.AttachmentDTO;
-import com.ac.su.community.attachment.AttachmentFlag;
-import com.ac.su.community.attachment.AttachmentService;
+import com.ac.su.ResponseMessage;
+import com.ac.su.community.attachment.*;
+import com.ac.su.community.board.Board;
+import com.ac.su.community.board.BoardRepository;
+import com.ac.su.community.report.Report;
+import com.ac.su.community.report.ReportRepository;
+import com.ac.su.member.Member;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
-import com.ac.su.community.attachment.AttachmentRepository;
-import com.ac.su.community.board.Board;
-import com.ac.su.community.board.BoardRepository;
-import com.ac.su.member.Member;
-import lombok.RequiredArgsConstructor;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,6 +22,7 @@ public class PostService {
     private final BoardRepository boardRepository;
     private final AttachmentRepository attachmentRepository;
     private final AttachmentService attachmentService;
+    private final ReportRepository reportRepository;  // 추가된 리포지토리
 
     // 게시글 작성 (URL을 입력받아 처리)
     public void createPost(PostDTO postDTO, Member member, Long boardId, Long clubId) {
@@ -82,7 +83,7 @@ public class PostService {
                 } catch (IllegalArgumentException e) {
                     return new PostResponseDto("에러남: Invalid AttachmentFlag value");
 
-            }
+                }
             }
             postRepository.save(post);
             // attachment 코드 추가
@@ -106,4 +107,33 @@ public class PostService {
         return new PostResponseDto("에러남: Post not found");
     }
 
+    // 신고 기능
+    public void reportPost(Long postId, Optional<Member> member) {
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid post ID: " + postId));
+        // 사용자가 이 게시글을 신고했는지 확인
+        if (reportRepository.existsByPostIdAndMemberId(postId, member.get().getId())) {
+            throw new IllegalStateException("해당 게시글을 이미 신고하었습니다.");
+        }
+
+        // 새로운 신고 생성
+        Report report = new Report();
+        report.setPost(post);
+        report.setMember(member.get());
+        reportRepository.save(report);
+
+        // 신고 수 체크
+        long reportCount = reportRepository.countByPostId(postId);
+        if (reportCount >= 5) {
+            // 신고 횟수 5회 넘으면 게시글 차단
+            blockPost(post);
+        }
+
+    }
+
+    // 게시글 차단
+    private void blockPost(Post post) {
+        post.setPostType(PostType.BLOCKED);// 게시글 타입을 차단으로 변경
+        postRepository.save(post);
+    }
 }

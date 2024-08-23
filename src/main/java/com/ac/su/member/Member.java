@@ -20,8 +20,6 @@ import java.util.List;
 @Table(name = "Member")
 public class Member {
 
-
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="member_id")
