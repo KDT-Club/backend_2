@@ -26,11 +26,16 @@ public class MemberController {
     //메인페이지로 이동
     @GetMapping("/")
     public ResponseEntity<ResponseMessage> test() {
-        return ResponseEntity.ok(new ResponseMessage("성공"));
+        return ResponseEntity.ok(new ResponseMessage("성공(24.08.22, 10:18)"));
+    }
+    @GetMapping("/login-fail")
+    public ResponseEntity<ResponseMessage> loginFail() {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseMessage("로그인 실패"));
     }
 
     @GetMapping("/getUserId")
     public ResponseEntity getUserId(Authentication auth) {
+        System.out.println("auth 객체 확인: " + auth);
         if (auth == null || !auth.isAuthenticated()) {
             // 인증되지 않은 경우 HTTP 401 (UNAUTHORIZED) 상태 코드와 메시지를 반환
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ResponseMessage("로그인 필요"));

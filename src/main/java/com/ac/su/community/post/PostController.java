@@ -1,9 +1,7 @@
 package com.ac.su.community.post;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
 import com.ac.su.ResponseMessage;
+import com.ac.su.community.attachment.AttachmentService;
 import com.ac.su.clubmember.ClubMemberId;
 import com.ac.su.clubmember.ClubMemberService;
 import com.ac.su.clubmember.MemberStatus;
@@ -17,6 +15,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -25,6 +24,7 @@ import java.util.Optional;
 public class PostController {
 
     private final PostService postService;
+    private final AttachmentService attachmentService;
     private final MemberRepository memberRepository;
     private final ClubMemberService clubMemberService;
 
@@ -143,5 +143,16 @@ public class PostController {
 
     private Optional<Member> getMemberById(Long memberId) {
         return memberRepository.findById(memberId);
+    }
+
+    // 첨부파일 삭제
+    @DeleteMapping("/posts/{postId}/attachments/{attachmentId}")
+    public ResponseEntity<ResponseMessage> deleteAttachment(@PathVariable Long postId, @PathVariable Long attachmentId) {
+        try {
+            attachmentService.deleteAttachment(postId, attachmentId);
+            return ResponseEntity.ok(new ResponseMessage("첨부파일 삭제 성공!"));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseMessage("첨부파일 삭제 실패! 에러 메시지: " + e.getMessage()));
+        }
     }
 }
