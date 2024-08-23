@@ -40,7 +40,7 @@ public class Post {
     private AttachmentFlag attachmentFlag; // Enum 타입으로 변경
     @Column
     @Enumerated(EnumType.STRING)
-    private PostType postType;
+    private PostType postType = PostType.ACTIVE; // 기본값을 ACTIVE로 설정
     @Column
     private String clubName;
     @ManyToOne
