@@ -155,4 +155,24 @@ public class PostController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseMessage("첨부파일 삭제 실패! 에러 메시지: " + e.getMessage()));
         }
     }
+    // 게시글 좋아요 추가
+    @PostMapping("/posts/{postId}/like")
+    public ResponseEntity<String> likePost(@PathVariable Long postId, @AuthenticationPrincipal User user) {
+        try {
+            Member member = getAuthenticatedMember(user);
+            long likeCount = postService.likePost(postId, member);
+            return ResponseEntity.ok("좋아요가 추가되었습니다. 현재 좋아요 수: " + likeCount);
+        } catch (IllegalStateException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("서버 오류: " + e.getMessage());
+        }
+    }
+
+    // 게시글 좋아요 수 조회
+    @GetMapping("/posts/{postId}/likes")
+    public ResponseEntity<Long> getLikeCount(@PathVariable Long postId) {
+        long likeCount = postService.getLikeCount(postId);
+        return ResponseEntity.ok(likeCount);
+    }
 }

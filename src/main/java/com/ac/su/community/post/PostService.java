@@ -1,14 +1,16 @@
 package com.ac.su.community.post;
 
-import com.ac.su.ResponseMessage;
+
 import com.ac.su.community.attachment.*;
 import com.ac.su.community.board.Board;
 import com.ac.su.community.board.BoardRepository;
 import com.ac.su.community.report.Report;
+import com.ac.su.community.postLike.PostLike;
+import com.ac.su.community.postLike.PostLikeRepository;
 import com.ac.su.community.report.ReportRepository;
 import com.ac.su.member.Member;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
+
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
@@ -22,6 +24,7 @@ public class PostService {
     private final BoardRepository boardRepository;
     private final AttachmentRepository attachmentRepository;
     private final AttachmentService attachmentService;
+    private final PostLikeRepository postLikeRepository;
     private final ReportRepository reportRepository;  // 추가된 리포지토리
 
     // 게시글 작성 (URL을 입력받아 처리)
@@ -135,5 +138,27 @@ public class PostService {
     private void blockPost(Post post) {
         post.setPostType(PostType.BLOCKED);// 게시글 타입을 차단으로 변경
         postRepository.save(post);
+    }
+    // 좋아요 추가 및 좋아요 수 반환
+    public long likePost(Long postId, Member member) {
+        // 이미 좋아요를 눌렀는지 확인
+        if (postLikeRepository.existsByPostIdAndMemberId(postId, member.getId())) {
+            throw new IllegalStateException("이미 이 게시글에 좋아요를 눌렀습니다.");
+        }
+
+        // 새로운 좋아요 생성
+        PostLike postLike = new PostLike();
+        postLike.setPost(postRepository.findById(postId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid post ID: " + postId)));
+        postLike.setMember(member);
+        postLikeRepository.save(postLike);
+
+        // 현재 게시글의 좋아요 수 반환
+        return postLikeRepository.countByPostId(postId);
+    }
+
+    // 게시글의 좋아요 수 반환
+    public long getLikeCount(Long postId) {
+        return postLikeRepository.countByPostId(postId);
     }
 }
