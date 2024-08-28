@@ -35,6 +35,7 @@ public class PostController {
                 .orElseThrow(() -> new IllegalArgumentException("Invalid user"));
     }
 
+
     // 자유 게시판 글 작성 처리 (URL을 입력받아 저장)
     @PostMapping("/board/1/posts")
     public ResponseEntity<ResponseMessage> createGeneralPost(@RequestBody PostDTO request, @AuthenticationPrincipal User user) {
