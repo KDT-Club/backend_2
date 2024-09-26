@@ -15,18 +15,19 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Optional;
 
 @RestController
-@RequiredArgsConstructor
+//@RequiredArgsConstructor
 public class MemberController {
 
     @Autowired
     private MemberService memberService;
 
-    private final MemberRepository memberRepository; //member 객체에 대한 입출력 함수
+    @Autowired
+    private MemberRepository memberRepository; //member 객체에 대한 입출력 함수
 
     //메인페이지로 이동
     @GetMapping("/")
     public ResponseEntity<ResponseMessage> test() {
-        return ResponseEntity.ok(new ResponseMessage("성공(24.08.27, 13:40)"));
+        return ResponseEntity.ok(new ResponseMessage("성공(24.09.26, 22:20)"));
     }
     @GetMapping("/login-fail")
     public ResponseEntity<ResponseMessage> loginFail() {
