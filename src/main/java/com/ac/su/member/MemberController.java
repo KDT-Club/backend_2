@@ -27,7 +27,7 @@ public class MemberController {
     //메인페이지로 이동
     @GetMapping("/")
     public ResponseEntity<ResponseMessage> test() {
-        return ResponseEntity.ok(new ResponseMessage("성공(24.08.27, 13:40)"));
+        return ResponseEntity.ok(new ResponseMessage("성공(24.09.26, 22:20)"));
     }
     @GetMapping("/login-fail")
     public ResponseEntity<ResponseMessage> loginFail() {

@@ -39,29 +39,39 @@ public class ClubController {
 
     // 내 동아리 목록 (동아리 메뉴 초기 페이지)
     // /clubs?memberId={memberId}
+    // 동아리 정보 가져오기
     @GetMapping("/clubs/{clubName}")
-    public ClubDTO2 getClubByName(@PathVariable String clubName) {
-        Optional<Club> a = clubRepository.findByName(clubName); //간단해서 서비스 레이어로 분리안했음
+    public ResponseEntity<?> getClubByName(@PathVariable String clubName) {
+        Optional<Club> clubOptional = clubRepository.findByName(clubName);
 
-        //DTO에 클럽 객체랑 멤버를 담아주자
+        // Optional 값이 없으면 404 응답 반환
+        if (clubOptional.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("Club with name " + clubName + " not found");
+        }
+
+        Club club = clubOptional.get();
+
+        // DTO 생성
         ClubDTO2 clubDTO2 = new ClubDTO2();
-        clubDTO2.setClubId(a.get().getId());
-        clubDTO2.setClubName(a.get().getName());
-        clubDTO2.setClubSlogan(a.get().getClubSlogan());
-        clubDTO2.setClubImgUrl(a.get().getClubImgUrl());
-        clubDTO2.setClubType(a.get().getClubType());
-        clubDTO2.setDescription(a.get().getDescription());
+        clubDTO2.setClubId(club.getId());
+        clubDTO2.setClubName(club.getName());
+        clubDTO2.setClubSlogan(club.getClubSlogan());
+        clubDTO2.setClubImgUrl(club.getClubImgUrl());
+        clubDTO2.setClubType(club.getClubType());
+        clubDTO2.setDescription(club.getDescription());
 
-        //멤버 객체도 담아주자
+        // Member 객체 설정
         Member member = new Member();
-        member.setId(a.get().getMember().getId());
-        member.setName(a.get().getMember().getName());
-        member.setPhone(a.get().getMember().getPhone());
-        member.setMemberImageURL(a.get().getMember().getMemberImageURL());
-        member.setStudentId(a.get().getMember().getStudentId());
+        member.setId(club.getMember().getId());
+        member.setName(club.getMember().getName());
+        member.setPhone(club.getMember().getPhone());
+        member.setMemberImageURL(club.getMember().getMemberImageURL());
+        member.setStudentId(club.getMember().getStudentId());
         clubDTO2.setMember(member);
-        System.out.println("aaaa: " + clubDTO2);
-        return clubDTO2;
+
+        // 성공 시 200 OK 응답
+        return ResponseEntity.ok(clubDTO2);
     }
 
     // 동아리 생성
